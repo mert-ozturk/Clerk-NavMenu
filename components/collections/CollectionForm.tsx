@@ -2,7 +2,7 @@
  import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import React from 'react'
+import React, { useState } from 'react'
 import { Separator } from '../ui/separator'
 import { Button } from "@/components/ui/button"
 import {
@@ -18,14 +18,18 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import ImageUpload from "../custom ui/ImageUpload"
 import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
+
 const formSchema = z.object({
-    title:z.string().min(2).max(20),
-    description: z.string().min(2).max(500).trim(),
-    image:z.string() 
-  })
+  title: z.string().min(2).max(120),
+  description: z.string().min(2).max(500).trim(),
+  image: z.string(),
+});
 
 const CollectionForm = () => {
-        const router = useRouter()
+    const router = useRouter()
+    const [loading,setLoading] = useState(false)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -35,8 +39,23 @@ const CollectionForm = () => {
 
         },
       })
-      const  onSubmit = async (values: z.infer<typeof formSchema>) => {
-         console.log(values)
+      
+      const onSubmit = async (values: z.infer<typeof formSchema>) => {
+       try{
+        const res = await fetch("/api/collections",{
+          method: "POST",
+          body:JSON.stringify(values)
+        });
+        if(res.ok){
+          setLoading(false)
+          toast.success("Collection created")
+          router.push("/collections")
+        }
+       }catch(err){
+        console.log("[collections_POST]",err)
+        toast.success("Failed to create collection!")
+       }
+        
       }
   return (
     <div className='p-10'>
@@ -60,12 +79,12 @@ const CollectionForm = () => {
         />
          <FormField
           control={form.control}
-          name="descreption"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Descreption" {...field} />
+                <Textarea placeholder="Description" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,18 +97,18 @@ const CollectionForm = () => {
             <FormItem>
               <FormLabel>Image</FormLabel>
               <FormControl>
-                 <ImageUpload 
-                 value={field.value ? [field.value]: [] } 
-                 onChange={(url)=>field.onChange(url)} 
-                 onRemove={()=>field.onChange("")}
-                 />
+              <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                  />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
        <div className="flex gap-10">
-       <Button type="submit">Submit</Button>
+       <Button type="submit" >Submit</Button>
        <Button type="button" onClick={()=>router.push("/collections")}>Discard</Button>
        </div>
       </form>
