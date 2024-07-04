@@ -26,13 +26,17 @@ const formSchema = z.object({
   image: z.string(),
 });
 
-const CollectionForm = () => {
+interface CollectionFormProps{
+  initialData?: CollectionType | null;
+}
+
+const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
     const router = useRouter()
     const [loading,setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
+        defaultValues: initialData ? initialData : {
           title: "",
           description:"",
           image:"",
@@ -42,6 +46,8 @@ const CollectionForm = () => {
       
       const onSubmit = async (values: z.infer<typeof formSchema>) => {
        try{
+        setLoading(true)
+        const url = initialData ? `/api/collections/${initialData._id}` : "" ;
         const res = await fetch("/api/collections",{
           method: "POST",
           body:JSON.stringify(values)
