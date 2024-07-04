@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import React, { useState } from 'react'
 import { Separator } from '../ui/separator'
+import "react-quill/dist/quill.bubble.css";
+import ReactQuill from "react-quill";
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -17,12 +19,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import ImageUpload from "../custom ui/ImageUpload"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
+import Delete from "../custom ui/Delete"
 
 const formSchema = z.object({
   title: z.string().min(2).max(120),
-  description: z.string().min(2).max(500).trim(),
+  description: z.string().min(2).max(2000).trim(),
   image: z.string(),
 });
 
@@ -33,6 +36,8 @@ interface CollectionFormProps{
 const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
     const router = useRouter()
     const [loading,setLoading] = useState(false)
+ 
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -47,14 +52,15 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
       const onSubmit = async (values: z.infer<typeof formSchema>) => {
        try{
         setLoading(true)
-        const url = initialData ? `/api/collections/${initialData._id}` : "" ;
-        const res = await fetch("/api/collections",{
+        const url = initialData ? `/api/collections/${initialData._id}` : "/api/collections" ;
+        const res = await fetch(url,{
           method: "POST",
-          body:JSON.stringify(values)
+          body:JSON.stringify(values),
         });
         if(res.ok){
           setLoading(false)
           toast.success("Collection created")
+          window.location.href = "/collections"
           router.push("/collections")
         }
        }catch(err){
@@ -65,7 +71,15 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
       }
   return (
     <div className='p-10'>
+      {initialData ? (
+        <div className="flex items-center justify-between"> 
+        <p className='text-gray-700 text-heading2-bold'>Edit Collection</p>
+        <Delete id={initialData._id} />
+        </div>
+      ) : (
         <p className='text-gray-700 text-heading2-bold'>Create Collection</p>
+      )}
+        
         <Separator className="bg-gray-600 mt-4 mb-7"   />
 
         <Form {...form}>
@@ -90,7 +104,15 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Description" {...field} />
+                 
+                <ReactQuill
+          
+          theme="bubble"
+     
+          {...field}
+          placeholder="Tell your story..."
+         
+        />
               </FormControl>
               <FormMessage />
             </FormItem>
