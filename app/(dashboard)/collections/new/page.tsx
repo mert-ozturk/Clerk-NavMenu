@@ -1,9 +1,12 @@
+import CollectionForm from '@/components/collections/CollectionForm'
 import React from 'react'
 
 const CreateCollection = () => {
   return (
-    <div>Create</div>
+    
+      <CollectionForm />
+   
   )
 }
 
-export default Create
+export default CreateCollection

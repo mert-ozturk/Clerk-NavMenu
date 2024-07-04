@@ -1,10 +1,11 @@
-import { UserButton } from '@clerk/nextjs'
+ 
+import CollectionForm from '@/components/collections/CollectionForm'
 import React from 'react'
 
 const Home = () => {
   return (
     <div>
-        <UserButton />
+        <CollectionForm />
     </div>
   )
 }
