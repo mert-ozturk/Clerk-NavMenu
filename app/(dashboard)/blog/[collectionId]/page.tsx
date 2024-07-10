@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import "react-quill/dist/quill.bubble.css";
 import ReactQuill from "react-quill";
 
-const CollectionDetails = ({params}:{params:{collectionId:string}}) => {
+const BlogDetails = ({params}:{params:{collectionId:string}}) => {
     const [loading,setLoading] = useState(true)
     const [collectionDetails,setCollectionDetails] = useState<CollectionType | null>(null)
     
@@ -31,8 +31,8 @@ const CollectionDetails = ({params}:{params:{collectionId:string}}) => {
     },[])
 
     return loading ? <Loader /> : (
-    <CollectionSingle initialData={collectionDetails} />
+    <CollectionForm initialData={collectionDetails} />
   )
 }
 
-export default CollectionDetails
+export default BlogDetails

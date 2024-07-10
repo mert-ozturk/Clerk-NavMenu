@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import React, { useState } from 'react'
 import { Separator } from '../ui/separator'
-import "react-quill/dist/quill.bubble.css";
+import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +22,7 @@ import ImageUpload from "../custom ui/ImageUpload"
 import { useParams, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import Delete from "../custom ui/Delete"
+import { Edit } from "lucide-react"
 
 const formSchema = z.object({
   title: z.string().min(2).max(120),
@@ -81,6 +82,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
         <div className="flex items-center justify-between"> 
         <p className='text-gray-700 text-heading2-bold'>Edit Collection</p>
         <Delete id={initialData._id} />
+        
         </div>
       ) : (
         <p className='text-gray-700 text-heading2-bold'>Create Collection</p>
@@ -112,7 +114,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
               <FormControl>
                  
                 <ReactQuill
-          theme="bubble"
+          theme="snow"
           {...field}
           placeholder="Text description..."
           onKeyDown={handleKeyPress} 
