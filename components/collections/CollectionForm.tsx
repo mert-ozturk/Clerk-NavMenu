@@ -48,6 +48,12 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
 
         },
       })
+
+      const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if(e.key === "Enter"){
+          e.preventDefault()
+        }
+      }
       
       const onSubmit = async (values: z.infer<typeof formSchema>) => {
        try{
@@ -91,7 +97,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Title" {...field} />
+                <Input placeholder="Title" {...field} onKeyDown={handleKeyPress} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -106,12 +112,10 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
               <FormControl>
                  
                 <ReactQuill
-          
           theme="bubble"
-     
           {...field}
-          placeholder="Tell your story..."
-         
+          placeholder="Text description..."
+          onKeyDown={handleKeyPress} 
         />
               </FormControl>
               <FormMessage />
