@@ -44,15 +44,23 @@ interface CollectionFormProps{
 const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
    const router = useRouter()
    const [loading,setLoading] = useState(false)
- 
+   
 
     
  return loading ? <Loader /> : (
-   <div >
-      
-    
-    <h1 className={styles.title}>{initialData?.title}</h1>
-    <Image src={initialData?.image} width={700} height={500}  />
+  <div className="-mx-4 flex flex-col gap-4 items-center justify-center"> 
+  <div className="w-full px-4 lg:w-8/12">
+    <h2 className="mb-8 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl">{initialData?.title}</h2>
+    <div className="mb-10 w-full overflow-hidden rounded">
+                    <div className="relative aspect-[97/60] w-full sm:aspect-[97/44]">
+                      <Image
+                        src={initialData?.image || ""}
+                        alt="Blog"
+                        className="object-cover object-center"
+                        fill
+                      />
+                    </div>
+                  </div>
     <div className={styles.post}>
     <div
             className={styles.description}
@@ -60,7 +68,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
           />
  
  </div>
-   
+ </div>
   </div>
  )
 }
