@@ -1,14 +1,17 @@
 "use client"
 import { navLinks } from '@/lib/constants'
-import { UserButton } from '@clerk/nextjs'
+import { UserButton, useSession, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 import React from 'react'
+import { Button } from '../ui/button'
 
 const LeftSideBar = () => {
     const pathname = usePathname()
-
+    const {user} = useUser()
+    const {session} = useSession()
+ 
   return (
     <div
     className='h-screen left-0 top-0 sticky p-10 flex flex-col gap-16 bg-blue-2 shadow-xl max-lg:hidden' 
@@ -22,8 +25,19 @@ const LeftSideBar = () => {
         ))}
     </div>
     <div className='flex gap-4 text-body-medium items-center'>
+       
+         {user?(
+       <>
         <UserButton/>
-        <p>Edit Profile</p>
+        <p className='font-bold text-bl'>{session?.user?.id}</p>
+       
+       </>
+         ):(
+      <>
+       <Link href="/sign-in"><Button>Sign In</Button></Link>
+       <Link href="/sign-up"><Button>Sign Up</Button></Link>
+      </>
+         )}
     </div>
     </div>
   )

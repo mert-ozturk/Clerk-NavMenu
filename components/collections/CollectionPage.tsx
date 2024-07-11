@@ -10,9 +10,10 @@ import React, { useEffect, useState } from 'react'
 import styles from "./card.module.css";
  
 import Link from 'next/link'
+ 
 
 
-const CollectionPage = ({posts}) => {
+const CollectionPage = ( ) => {
   const params = useParams()
   const router = useRouter()
   const [loading,setLoading] = useState(false)
@@ -62,7 +63,7 @@ const CollectionPage = ({posts}) => {
         </div>
         
       ))}
-         
+ 
         
         
       </div>

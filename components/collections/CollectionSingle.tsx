@@ -30,6 +30,11 @@ import Loader from "../custom ui/Loader"
 import { auth } from "@clerk/nextjs/server"
 import Link from "next/link"
 import { Edit } from "lucide-react"
+ 
+import { DataTable } from "../custom ui/DataTable"
+import Collections from "@/app/(dashboard)/collections/page"
+import { useUser } from "@clerk/nextjs"
+import EditPage from "@/app/edit/page"
 
 const formSchema = z.object({
  title: z.string().min(2).max(120),
@@ -41,15 +46,21 @@ interface CollectionFormProps{
  initialData?: CollectionType | null;
 }
 
-const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
+const CollectionSingle: React.FC<CollectionFormProps> = ({initialData}) => {
    const router = useRouter()
    const [loading,setLoading] = useState(false)
-   
-
+   const { user } = useUser();
+ 
     
  return loading ? <Loader /> : (
   <div className="-mx-4 flex flex-col gap-4 items-center justify-center"> 
   <div className="w-full px-4 lg:w-8/12">
+  {user && (
+        <div className="gap gap-4 flex items-center mt-4"> 
+        <Link href={`/blog/${initialData?._id}`} className="hover:text-blue-700"><Edit /></Link>
+       
+        </div>
+    )}
     <h2 className="mb-8 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl">{initialData?.title}</h2>
     <div className="mb-10 w-full overflow-hidden rounded">
                     <div className="relative aspect-[97/60] w-full sm:aspect-[97/44]">
@@ -69,8 +80,9 @@ const CollectionForm: React.FC<CollectionFormProps> = ({initialData}) => {
  
  </div>
  </div>
+    
   </div>
  )
 }
 
-export default CollectionForm
+export default CollectionSingle
